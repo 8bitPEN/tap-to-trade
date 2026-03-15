@@ -16,7 +16,7 @@ trades.post("/api/trades", authMiddleware, async (c) => {
 
   const body = await c.req.json();
   const trade = await recordTrade(user.id, {
-    walletAddress: body.walletAddress,
+    walletAddress: user.walletAddress,
     direction: body.direction,
     size: body.size,
     entryPrice: body.entryPrice,
