@@ -40,7 +40,7 @@ export function AccountBar() {
         <div style={styles.separator} />
 
         <span style={styles.balance}>
-          {account ? `$${account.balance.toFixed(2)}` : "--"}
+          {account ? `$${account.margin.totalBalance.toFixed(2)}` : "--"}
         </span>
       </div>
 

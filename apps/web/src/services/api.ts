@@ -51,7 +51,7 @@ export async function requestFaucet(signedTx: unknown) {
 }
 
 export async function queryAccount(payload: unknown) {
-  return request<{ balance: number; equity: number; positions: unknown[] }>("/api/account", {
+  return request<unknown>("/api/account", {
     method: "POST",
     body: JSON.stringify(payload),
   });

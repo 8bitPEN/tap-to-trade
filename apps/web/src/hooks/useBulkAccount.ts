@@ -2,10 +2,21 @@ import { useState, useEffect, useCallback } from "react";
 import { queryAccount } from "../services/api";
 import { useGameStore } from "../store/gameStore";
 
+interface BulkMargin {
+  totalBalance: number;
+  availableBalance: number;
+  marginUsed: number;
+  notional: number;
+  realizedPnl: number;
+  unrealizedPnl: number;
+  fees: number;
+  funding: number;
+}
+
 interface BulkAccountInfo {
-  balance: number;
-  equity: number;
+  margin: BulkMargin;
   positions: unknown[];
+  openOrders: unknown[];
 }
 
 const POLL_INTERVAL = 10_000; // poll every 10 seconds
@@ -23,8 +34,12 @@ export function useBulkAccount() {
     setError(null);
 
     try {
-      const data = await queryAccount({ type: "fullAccount", user: walletAddress });
-      setAccount(data);
+      const raw = await queryAccount({ type: "fullAccount", user: walletAddress }) as
+        | Array<{ fullAccount: BulkAccountInfo }>
+        | { fullAccount: BulkAccountInfo };
+      // Bulk API returns [{ fullAccount: { margin, positions, openOrders, leverageSettings } }]
+      const entry = Array.isArray(raw) ? raw[0]?.fullAccount : raw.fullAccount;
+      if (entry) setAccount(entry);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to fetch account";
       setError(message);
