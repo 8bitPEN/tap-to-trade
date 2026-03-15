@@ -26,7 +26,7 @@ trades.post("/api/trades", authMiddleware, async (c) => {
     openedAt: body.openedAt,
   });
 
-  return c.json({ trade });
+  return c.json({ id: trade.id });
 });
 
 trades.get("/api/trades/:userId", async (c) => {
